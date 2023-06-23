@@ -1,0 +1,41 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  margin: 10px 0;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  font-weight: bolder;
+  color: var(--color-text);
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-bg-dark);
+}
+
+.filters {
+  display: flex;
+}
+
+.filter {
+  font-size: 25px;
+  margin: 5px;
+  text-transform: capitalize;
+  background-color: transparent;
+  font-weight: bold;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.filter.selected {
+  color: #6ee6be;
+  transition: all 0.3s ease-in-out;
+}
