@@ -1,0 +1,102 @@
+.container {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background-color: var(--color-bg-dark);
+  border-top: 1px solid var(--color-grey);
+  border-bottom: 1px solid var(--color-grey);
+}
+
+.input {
+  width: 80%;
+  font-size: 20px;
+  padding: 14px 16px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+}
+
+input:focus {
+  border-color: var(--color-input);
+  box-shadow: 0 0 10px var(--color-input);
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6ee6be;
+  color: var(--color-white);
+  font-size: 40px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.button:hover {
+  filter: brightness(120%);
+}
+
+.list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.todo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  margin: 2px 0;
+  color: var(--color-text);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.text,
+.textCheck {
+  flex: 1 1 0%;
+  margin-left: 8px;
+  font-size: 24px;
+}
+
+.textCheck {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text);
+  background-color: transparent;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+}
+
+.button:hover .trash {
+  transform: scale(1.2);
+  color: red;
+}
+
+.trash {
+  font-size: 20px;
+  transition: all 0.3s ease-out;
+}
