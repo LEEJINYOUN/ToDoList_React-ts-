@@ -10,7 +10,7 @@ const App: FC = () => {
   return (
     <div className="App">
       <Header filters={filters} filter={filter} setFilter={setFilter} />
-      <TodoList />
+      <TodoList filter={filter} />
     </div>
   );
 };

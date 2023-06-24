@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { BsFillTrashFill } from "react-icons/bs";
 import styles from "./TodoList.module.css";
@@ -9,9 +9,15 @@ type todoCollectType = {
   status: string;
 };
 
-export const TodoList = () => {
+type Props = {
+  filter: string;
+};
+
+export const TodoList = (filter: Props) => {
   const [text, setText] = useState<string>("");
-  const [todoCollect, setTodoCollect] = useState<todoCollectType[]>([]);
+  const [todoCollect, setTodoCollect] = useState<todoCollectType[]>(() =>
+    readTodosFromLocalStorage()
+  );
   const uuid = uuidv4();
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -38,6 +44,22 @@ export const TodoList = () => {
     setTodoCollect(todoCollect.filter((t) => t.id !== deleted.id));
   };
 
+  const getFilteredItems = (todoCollect: todoCollectType[], filter: object) => {
+    let mode = Object.entries(filter)[0][1];
+    if (typeof mode === "string") {
+      if (mode === "모두") {
+        return todoCollect;
+      }
+      return todoCollect.filter((todo) => todo.status === mode);
+    }
+  };
+
+  const filtered = getFilteredItems(todoCollect, filter);
+
+  useEffect(() => {
+    localStorage.setItem("todoCollect", JSON.stringify(todoCollect));
+  }, [todoCollect]);
+
   return (
     <section className={styles.container}>
       <form className={styles.form} onSubmit={formSubmit}>
@@ -52,7 +74,7 @@ export const TodoList = () => {
         <button className={styles.button}>+</button>
       </form>
       <ul className={styles.list}>
-        {todoCollect.map((item, key) => (
+        {filtered?.map((item, key) => (
           <li className={styles.todo} key={key}>
             <input
               className={styles.checkbox}
@@ -86,3 +108,8 @@ export const TodoList = () => {
     </section>
   );
 };
+
+function readTodosFromLocalStorage() {
+  const todoCollect = localStorage.getItem("todoCollect");
+  return todoCollect ? JSON.parse(todoCollect) : [];
+}
