@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { BsFillTrashFill } from "react-icons/bs";
+import { useState, useEffect } from "react";
 import styles from "./TodoList.module.css";
+import AddTodo from "../AddTodo/AddTodo";
+import Todo from "../Todo/Todo";
 
-type todoCollectType = {
+export type TodoCollectType = {
   id: string;
   text: string;
   status: string;
@@ -15,36 +15,11 @@ type Props = {
 
 export const TodoList = (filter: Props) => {
   const [text, setText] = useState<string>("");
-  const [todoCollect, setTodoCollect] = useState<todoCollectType[]>(() =>
-    readTodosFromLocalStorage()
-  );
-  const uuid = uuidv4();
-  const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-  };
-  const inputRef = useRef<HTMLInputElement>(null);
-  const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (text.trim().length === 0) {
-      return;
-    }
-    const newTodo: todoCollectType = {
-      id: uuid,
-      text,
-      status: "진행중",
-    };
-    setTodoCollect([...todoCollect, newTodo]);
-    setText("");
-    inputRef.current?.focus();
-  };
-  const todoUpdate = (updated?: any) => {
-    setTodoCollect(todoCollect.map((t) => (t.id === updated.id ? updated : t)));
-  };
-  const todoDelete = (deleted?: any) => {
-    setTodoCollect(todoCollect.filter((t) => t.id !== deleted.id));
-  };
-
-  const getFilteredItems = (todoCollect: todoCollectType[], filter: object) => {
+  const [todoCollect, setTodoCollect] = useState<TodoCollectType[]>(() => {
+    const todoCollect = localStorage.getItem("todoCollect");
+    return todoCollect ? JSON.parse(todoCollect) : [];
+  });
+  const getFilteredItems = (todoCollect: TodoCollectType[], filter: object) => {
     let mode = Object.entries(filter)[0][1];
     if (typeof mode === "string") {
       if (mode === "모두") {
@@ -62,54 +37,22 @@ export const TodoList = (filter: Props) => {
 
   return (
     <section className={styles.container}>
-      <form className={styles.form} onSubmit={formSubmit}>
-        <input
-          className={styles.input}
-          type="text"
-          placeholder="할 일을 추가하세요."
-          value={text}
-          onChange={inputChange}
-          ref={inputRef}
-        />
-        <button className={styles.button}>+</button>
-      </form>
+      <AddTodo
+        text={text}
+        setText={setText}
+        todoCollect={todoCollect}
+        setTodoCollect={setTodoCollect}
+      />
       <ul className={styles.list}>
         {filtered?.map((item, key) => (
-          <li className={styles.todo} key={key}>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
-              id={item.id}
-              checked={item.status === "완료"}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const status = e.target.checked ? "완료" : "진행중";
-                todoUpdate({ ...item, status });
-              }}
-            />
-            <label
-              htmlFor={item.id}
-              className={
-                item.status !== "완료" ? styles.text : styles.textCheck
-              }
-            >
-              {item.text}
-            </label>
-            <button
-              onClick={() => {
-                todoDelete(item);
-              }}
-              className={styles.button}
-            >
-              <BsFillTrashFill className={styles.trash} />
-            </button>
-          </li>
+          <Todo
+            key={key}
+            item={item}
+            todoCollect={todoCollect}
+            setTodoCollect={setTodoCollect}
+          />
         ))}
       </ul>
     </section>
   );
 };
-
-function readTodosFromLocalStorage() {
-  const todoCollect = localStorage.getItem("todoCollect");
-  return todoCollect ? JSON.parse(todoCollect) : [];
-}
